@@ -1,22 +1,8 @@
 
 
-function drawBoardCanvas(){
-    Canvas.boardCtx.clearRect(0,0,window.innerWidth,window.innerHeight)
-    // SporeVisual.drawProvisionalGrid()
-    SporeVisual.drawAllLines()
-    SporeVisual.drawAllSpores()
-    SporeVisual.drawSporesInRange()
-}
-
-function drawScoreCanvas(){
-    Canvas.scoreCtx.clearRect(0,0,window.innerWidth,window.innerHeight)
-    SporeVisual.drawPlayerScore()
-    SporeVisual.drawScoreDiff()
-}
-
 function drawStaticCanvases(){
-    drawBoardCanvas()
-    drawScoreCanvas()
+    SporeVisual.drawBoard()
+    SporeVisual.drawScore()
 }
 
 function resize(){
@@ -31,8 +17,8 @@ function resize(){
 function placeNewSpore() {
     Timer.startReduction();
     SporeData.addNewSpore(
-        BoardShiftX.changeCoords( SporeData.tileifyCoord(BoardShiftX.changeCoords(MousePosX,true)),false),
-        BoardShiftY.changeCoords( SporeData.tileifyCoord(BoardShiftY.changeCoords(MousePosY,true),false))
+        UserInput.BoardShiftX.changeCoords( SporeData.tileifyCoord(UserInput.BoardShiftX.changeCoords(UserInput.getMousePosX,true)),false),
+        UserInput.BoardShiftY.changeCoords( SporeData.tileifyCoord(UserInput.BoardShiftY.changeCoords(UserInput.getMousePosY,true),false))
     )
     SporeData.checkSporesIfDead()
     SporeData.calculatePlayerPointCount()
@@ -45,8 +31,9 @@ function placeNewSpore() {
 
 function animateDonutAndSporeCanvas(){
     Canvas.donutCtx.clearRect(0,0,window.innerWidth,window.innerHeight)
-    drawMouseDonut()
-    drawBoardCanvas()
+    MouseDonut.draw()
+    Timer.drawTimer()
+    SporeVisual.markSporesInRange()
     
     requestAnimationFrame(animateDonutAndSporeCanvas)
 }
@@ -57,7 +44,7 @@ function animateDonutAndSporeCanvas(){
     resize()
     window.addEventListener('resize',resize) 
     animateDonutAndSporeCanvas()
-    document.addEventListener('keydown',(event)=>{
+    window.addEventListener('keydown',(event)=>{
         console.log('keydown - ' + event.code)
         if (event.code == Settings.newSporeKey){
             placeNewSpore()
@@ -68,5 +55,6 @@ function animateDonutAndSporeCanvas(){
         }
     })
     console.log('animate is running!')
+
 })()
 

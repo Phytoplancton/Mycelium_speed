@@ -1,8 +1,6 @@
 const SporeVisual = (()=>{
-    const SV = {}
 
-
-    SV.drawPlayerScore = ()=>{
+    const drawPlayerScore = ()=>{
         for (var i = 0; i < Settings.playerCount; i ++){
             Canvas.scoreCtx.font = Settings.font
             Canvas.scoreCtx.fillStyle = Settings.neutralColor
@@ -15,7 +13,7 @@ const SporeVisual = (()=>{
         }
 
     }
-    SV.drawScoreDiff = ()=>{
+    const drawScoreDiff = ()=>{
         var scoreDiff = SporeData.calcScoreDiff()
         Canvas.scoreCtx.font = Settings.font
         Canvas.scoreCtx.fillStyle = Settings.playerColors[SporeData.calcLeadingPlayer()]
@@ -28,10 +26,10 @@ const SporeVisual = (()=>{
         
     }
 
-    SV.drawAllSpores = function(){
+    const drawAllSpores = ()=>{
         SporeData.loopOverAllSpores(function(spore){
-                var shiftedX = BoardShiftX.changeCoords(spore.x)
-                var shiftedY = BoardShiftY.changeCoords(spore.y)
+                var shiftedX = UserInput.BoardShiftX.changeCoords(spore.x)
+                var shiftedY = UserInput.BoardShiftY.changeCoords(spore.y)
                 Canvas.boardCtx.beginPath()
                 Canvas.boardCtx.lineWidth = 0
                 Canvas.boardCtx.fillStyle = Settings.playerColors[spore.player]
@@ -41,54 +39,69 @@ const SporeVisual = (()=>{
             }
         )
     }
-    SV.drawAllLines = function(){
+    const drawAllLines = ()=>{
         SporeData.loopOverAllSpores(function(spore1){
-            var shiftedX = BoardShiftX.changeCoords(spore1.x)
+            var shiftedX = UserInput.BoardShiftX.changeCoords(spore1.x)
             if(shiftedX<0 || shiftedX>window.innerWidth){return}
-            var shiftedY = BoardShiftY.changeCoords(spore1.y)
+            var shiftedY = UserInput.BoardShiftY.changeCoords(spore1.y)
             if(shiftedY<0 || shiftedY>window.innerHeight){return}
             SporeData.loopOverLinkedSpores(spore1,(spore1,spore2)=>{
                 Canvas.boardCtx.beginPath()
                 SporeData.checkIfColorsAreEqual(spore1,spore2)
                 Canvas.boardCtx.lineWidth = Settings.lineWidth
                 Canvas.boardCtx.moveTo(shiftedX,shiftedY)
-                Canvas.boardCtx.lineTo(BoardShiftX.changeCoords(spore2.x),BoardShiftY.changeCoords(spore2.y))
+                Canvas.boardCtx.lineTo(UserInput.BoardShiftX.changeCoords(spore2.x),UserInput.BoardShiftY.changeCoords(spore2.y))
                 Canvas.boardCtx.stroke()
             })
         })
     }
-    SV.drawSporesInRange = ()=>{
+    const markSporesInRange = ()=>{
         SporeData.loopOverAllSpores(function(spore1){
+            console.log('marksporesInRange')
             var distToOtherSpore = SporeData.calcDistance(
                 spore1.x,spore1.y,
-                SporeData.tileifyCoord(BoardShiftX.changeCoords(MousePosX,true)),
-                SporeData.tileifyCoord(BoardShiftY.changeCoords(MousePosY,true))
+                SporeData.tileifyCoord(UserInput.BoardShiftX.changeCoords(UserInput.getMousePosX,true)),
+                SporeData.tileifyCoord(UserInput.BoardShiftY.changeCoords(UserInput.getMousePosY,true))
             )          
 
             if (distToOtherSpore < Settings.outerRadius){
-                Canvas.boardCtx.beginPath()
-                Canvas.boardCtx.strokeStyle = Settings.playerColors[spore1.player]
-                Canvas.boardCtx.lineWidth = Settings.markingWidth
-                Canvas.boardCtx.arc(BoardShiftX.changeCoords(spore1.x),BoardShiftY.changeCoords(spore1.y),Settings.sporeRadius,0,Math.PI*2,false)
-                Canvas.boardCtx.stroke()
+                Canvas.timerCtx.beginPath()
+                Canvas.timerCtx.strokeStyle = Settings.playerColors[spore1.player]
+                Canvas.timerCtx.lineWidth = Settings.markingWidth
+                Canvas.timerCtx.arc(UserInput.BoardShiftX.changeCoords(spore1.x),UserInput.BoardShiftY.changeCoords(spore1.y),Settings.sporeRadius,0,Math.PI*2,false)
+                Canvas.timerCtx.stroke()
             }
         })
     }
 
-    SV.drawProvisionalGrid = ()=>{
+    const drawProvisionalGrid = ()=>{
         for ( var x = 0; x<Settings.horizontalTileCount; x++){
             for (var y = 0 ; y<Settings.verticalTileCount; y++){
                 Canvas.boardCtx.fillStyle = Settings.gridColor
                 Canvas.boardCtx.fillRect(
-                    BoardShiftX.changeCoords(Settings.tileLength * (x-Settings.tileMarkingLengthFactor),false), 
-                    BoardShiftY.changeCoords(Settings.tileLength *(y-Settings.tileMarkingLengthFactor),false), 
+                    UserInput.BoardShiftX.changeCoords(Settings.tileLength * (x-Settings.tileMarkingLengthFactor),false), 
+                    UserInput.BoardShiftY.changeCoords(Settings.tileLength *(y-Settings.tileMarkingLengthFactor),false), 
                     Settings.tileLength * Settings.tileMarkingLengthFactor* 2,
                     Settings.tileLength * Settings.tileMarkingLengthFactor* 2,
                 )
             }
         }
     }
-    
 
-    return SV
+    const drawBoard = ()=>{
+        Canvas.boardCtx.clearRect(0,0,window.innerWidth,window.innerHeight)
+        drawAllLines()
+        drawAllSpores()
+    }
+    const drawScore = ()=>{
+        Canvas.scoreCtx.clearRect(0,0,window.innerWidth,window.innerHeight)
+        drawPlayerScore()
+        drawScoreDiff()
+    }
+
+    return {
+        drawBoard,
+        drawScore,
+        markSporesInRange
+    }
 })()

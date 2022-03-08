@@ -20,8 +20,7 @@ const Timer = (()=>{
         clearInterval(T.redInterval)
     }
     T.drawTimer = ()=>{
-        Canvas.timerCtx.clearRect(0, window.innerHeight - 500, 
-            window.innerWidth, window.innerHeight)
+        Canvas.timerCtx.clearRect(0, 0, window.innerWidth, window.innerHeight)
         Canvas.timerCtx.font = Settings.font
         for (var i = 0; i <= Settings.playerCount; i ++){
             

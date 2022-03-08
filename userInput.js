@@ -1,80 +1,80 @@
-//default Mouseposiion = screen middle
-var MousePosX = window.innerWidth / 2
-var MousePosY = window.innerHeight /2
-//add eventlistener for tracking mousemovement
-document.addEventListener('mousemove', function(e) {
-    MousePosX = e.clientX - 9
-    MousePosY = e.clientY - 9
-})
-console.log('Mousedetector is runnig!')
 
-function createBoardShifter(keyOne,keyTwo,isXShifter){
-    const S = {}
-
-    S.keyOne = keyOne
-    S.keyTwo = keyTwo
-
-    S.shift = 0
-    S.changeCoords = (coord,isReverse)=>{
-        var boardDimension
-
-        if(isXShifter){
-            boardDimension = Settings.boardWidth
-        }
-        else{
-            boardDimension = Settings.boardHeight
-        }
-
-        if (isReverse){
-            return mod(coord - S.shift, boardDimension) + Settings.boardMargin
-        }
-        return mod( coord + S.shift , boardDimension) - Settings.boardMargin
-    }
+const UserInput = (()=>{
+    //default Mouseposiion = screen middle
+    let mousePosX = window.innerWidth / 2
+    let mousePosY = window.innerHeight /2
     
+    const updateMousePos = (e)=>{
+        mousePosX = e.clientX - 9
+        mousePosY = e.clientY - 9
+        console.log("Mousemove")
+    }
+    window.addEventListener('mousemove',updateMousePos)
 
-    S.shiftInterval
-    S.currentShiftLabel = ''
+    const getMousePosX = ()=>{return mousePosX}
+    const getMousePosY = ()=>{return mousePosY}
     
-
-    S.shiftCoords = (sign, shiftLabel)=>{
-        if(S.currentShiftLabel !== shiftLabel){
-            clearInterval(S.shiftInterval)
-            S.shiftInterval = setInterval(() => {
-                S.shift += Settings.shiftStep * sign
-            },Settings.shiftInterval );
-            S.currentShiftLabel = shiftLabel
-            console.log('shiftcoords')
+    const createBoardShifter = (keyOne,keyTwo,boardDimension)=>{
+    
+        let shift = 0
+        const changeCoords = (coord,isReverse)=>{
+            if (isReverse){
+                return mod(coord - shift, boardDimension) + Settings.boardMargin
+            }
+            return mod( coord + shift , boardDimension) - Settings.boardMargin
         }
-    }
-
-    S.clarShiftIntervalIfKey = (shiftLabel)=>{
-        if (shiftLabel === S.currentShiftLabel){
-            clearInterval(S.shiftInterval)
-            S.currentShiftLabel = ''
-            // console.log('clearShiftInterval')
-        }
-    }
-
-    document.addEventListener('keydown',event => {
-        switch (event.key){
-            case S.keyOne:
-                S.shiftCoords(-1, S.keyOne)
-                break
-            case S.keyTwo:
-                S.shiftCoords(1,S.keyTwo)
-                break
-        }
+        let shiftInterval
+        let currentShiftLabel = ''
         
-    })
-    document.addEventListener('keyup', event => {
-        S.clarShiftIntervalIfKey(event.key)
-    })
+        const shiftCoords = (sign, shiftLabel)=>{
+            if(currentShiftLabel !== shiftLabel){
+                clearInterval(shiftInterval)
+                shiftInterval = setInterval(() => {
+                    shift += Settings.shiftStep * sign
+                },Settings.shiftInterval );
+                currentShiftLabel = shiftLabel
+                console.log('shiftcoords')
+            }
+        }
+        const clarShiftIntervalIfKey = (shiftLabel)=>{
+            if (shiftLabel === currentShiftLabel){
+                clearInterval(shiftInterval)
+                currentShiftLabel = ''
+                // console.log('clearShiftInterval')
+            }
+        }
+        document.addEventListener('keyup', event => {
+            clarShiftIntervalIfKey(event.key)
+        })
+        document.addEventListener('keydown',event => {
+            switch (event.key){
+                case keyOne:
+                    shiftCoords(-1, keyOne)
+                    break
+                case keyTwo:
+                    shiftCoords(1, keyTwo)
+                    break
+            }
+            
+        })
+    
+        console.log('arrowKeyListener added!')
+    
+        return {
+            changeCoords
+        }
+    }
+    const BoardShiftX = createBoardShifter(
+        'ArrowRight','ArrowLeft', Settings.boardWidth)
+    const BoardShiftY = createBoardShifter(
+        'ArrowDown','ArrowUp', Settings.boardHeight)
 
-    console.log('arrowKeyListener added!')
+    return {
+        getMousePosX, getMousePosY, 
+        BoardShiftX, BoardShiftY,
+        updateMousePos
+    }
+})()
 
-    return S
-}
 
-const BoardShiftX = createBoardShifter('ArrowRight','ArrowLeft',true)
-const BoardShiftY = createBoardShifter('ArrowDown','ArrowUp',false)
 
