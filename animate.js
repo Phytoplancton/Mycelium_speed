@@ -31,7 +31,7 @@ function resize(){
 function placeNewSpore() {
     Timer.startReduction();
     SporeData.addNewSpore(
-        BoardShiftX.changeCoords( SporeData.tileifyCoord(BoardShiftX.changeCoords(MousePosX,true)),false),
+        BoardShiftX.changeCoords( SporeData.tileifyCoord(BoardShiftX.changeCoords(MousePosX,true),false)),
         BoardShiftY.changeCoords( SporeData.tileifyCoord(BoardShiftY.changeCoords(MousePosY,true),false))
     )
     SporeData.checkSporesIfDead()
