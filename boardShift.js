@@ -1,21 +1,6 @@
 
-const UserInput = (()=>{
-    //default Mouseposiion = screen middle
-    let mousePosX = window.innerWidth / 2
-    let mousePosY = window.innerHeight /2
-    
-    const updateMousePos = (e)=>{
-        mousePosX = e.clientX - 9
-        mousePosY = e.clientY - 9
-        console.log("Mousemove")
-    }
-    window.addEventListener('mousemove',updateMousePos)
-
-    const getMousePosX = ()=>{return mousePosX}
-    const getMousePosY = ()=>{return mousePosY}
-    
+const BoardShift = (()=>{
     const createBoardShifter = (keyOne,keyTwo,boardDimension)=>{
-    
         let shift = 0
         const changeCoords = (coord,isReverse)=>{
             if (isReverse){
@@ -64,17 +49,14 @@ const UserInput = (()=>{
             changeCoords
         }
     }
-    const BoardShiftX = createBoardShifter(
+    const x = createBoardShifter(
         'ArrowRight','ArrowLeft', Settings.boardWidth)
-    const BoardShiftY = createBoardShifter(
+    const y = createBoardShifter(
         'ArrowDown','ArrowUp', Settings.boardHeight)
-
+    
     return {
-        getMousePosX, getMousePosY, 
-        BoardShiftX, BoardShiftY,
-        updateMousePos
+        x, y
     }
+
 })()
-
-
 

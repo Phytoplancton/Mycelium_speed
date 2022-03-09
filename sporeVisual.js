@@ -28,8 +28,8 @@ const SporeVisual = (()=>{
 
     const drawAllSpores = ()=>{
         SporeData.loopOverAllSpores(function(spore){
-                var shiftedX = UserInput.BoardShiftX.changeCoords(spore.x)
-                var shiftedY = UserInput.BoardShiftY.changeCoords(spore.y)
+                var shiftedX = BoardShift.x.changeCoords(spore.x)
+                var shiftedY = BoardShift.y.changeCoords(spore.y)
                 Canvas.boardCtx.beginPath()
                 Canvas.boardCtx.lineWidth = 0
                 Canvas.boardCtx.fillStyle = Settings.playerColors[spore.player]
@@ -41,16 +41,16 @@ const SporeVisual = (()=>{
     }
     const drawAllLines = ()=>{
         SporeData.loopOverAllSpores(function(spore1){
-            var shiftedX = UserInput.BoardShiftX.changeCoords(spore1.x)
+            var shiftedX = BoardShift.x.changeCoords(spore1.x)
             if(shiftedX<0 || shiftedX>window.innerWidth){return}
-            var shiftedY = UserInput.BoardShiftY.changeCoords(spore1.y)
+            var shiftedY = BoardShift.y.changeCoords(spore1.y)
             if(shiftedY<0 || shiftedY>window.innerHeight){return}
             SporeData.loopOverLinkedSpores(spore1,(spore1,spore2)=>{
                 Canvas.boardCtx.beginPath()
                 SporeData.checkIfColorsAreEqual(spore1,spore2)
                 Canvas.boardCtx.lineWidth = Settings.lineWidth
                 Canvas.boardCtx.moveTo(shiftedX,shiftedY)
-                Canvas.boardCtx.lineTo(UserInput.BoardShiftX.changeCoords(spore2.x),UserInput.BoardShiftY.changeCoords(spore2.y))
+                Canvas.boardCtx.lineTo(BoardShift.x.changeCoords(spore2.x),BoardShift.y.changeCoords(spore2.y))
                 Canvas.boardCtx.stroke()
             })
         })
@@ -60,15 +60,15 @@ const SporeVisual = (()=>{
             console.log('marksporesInRange')
             var distToOtherSpore = SporeData.calcDistance(
                 spore1.x,spore1.y,
-                SporeData.tileifyCoord(UserInput.BoardShiftX.changeCoords(UserInput.getMousePosX,true)),
-                SporeData.tileifyCoord(UserInput.BoardShiftY.changeCoords(UserInput.getMousePosY,true))
+                SporeData.tileifyCoord(BoardShift.x.changeCoords(MousePos.getX,true)),
+                SporeData.tileifyCoord(BoardShift.y.changeCoords(MousePos.getY,true))
             )          
 
             if (distToOtherSpore < Settings.outerRadius){
                 Canvas.timerCtx.beginPath()
                 Canvas.timerCtx.strokeStyle = Settings.playerColors[spore1.player]
                 Canvas.timerCtx.lineWidth = Settings.markingWidth
-                Canvas.timerCtx.arc(UserInput.BoardShiftX.changeCoords(spore1.x),UserInput.BoardShiftY.changeCoords(spore1.y),Settings.sporeRadius,0,Math.PI*2,false)
+                Canvas.timerCtx.arc(BoardShift.x.changeCoords(spore1.x),BoardShift.y.changeCoords(spore1.y),Settings.sporeRadius,0,Math.PI*2,false)
                 Canvas.timerCtx.stroke()
             }
         })
@@ -79,8 +79,8 @@ const SporeVisual = (()=>{
             for (var y = 0 ; y<Settings.verticalTileCount; y++){
                 Canvas.boardCtx.fillStyle = Settings.gridColor
                 Canvas.boardCtx.fillRect(
-                    UserInput.BoardShiftX.changeCoords(Settings.tileLength * (x-Settings.tileMarkingLengthFactor),false), 
-                    UserInput.BoardShiftY.changeCoords(Settings.tileLength *(y-Settings.tileMarkingLengthFactor),false), 
+                    BoardShift.x.changeCoords(Settings.tileLength * (x-Settings.tileMarkingLengthFactor),false), 
+                    BoardShift.y.changeCoords(Settings.tileLength *(y-Settings.tileMarkingLengthFactor),false), 
                     Settings.tileLength * Settings.tileMarkingLengthFactor* 2,
                     Settings.tileLength * Settings.tileMarkingLengthFactor* 2,
                 )

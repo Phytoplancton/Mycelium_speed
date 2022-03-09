@@ -60,8 +60,8 @@ const SporeData = (()=>{
         spore2.linkedTo.push(SD.sporeArray.indexOf(spore1))
     }
     SD.addNewSpore = function(sporeX,sporeY){
-        newSporeX = UserInput.BoardShiftX.changeCoords(sporeX,true)
-        newSporeY = UserInput.BoardShiftY.changeCoords(sporeY,true)
+        newSporeX = BoardShift.x.changeCoords(sporeX,true)
+        newSporeY = BoardShift.y.changeCoords(sporeY,true)
 
         try {
             SD.loopOverAllSpores(function(oldSpore) {
