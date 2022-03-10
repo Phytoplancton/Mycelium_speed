@@ -17,8 +17,5 @@ const MouseDonut = (()=>{
         draw
     }
 })()
-function drawMouseDonut(){
-    
 
-}
 

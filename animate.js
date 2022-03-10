@@ -16,10 +16,9 @@ function resize(){
 
 function placeNewSpore() {
     Timer.startReduction();
-    let newSporeX = BoardShift.x.changeCoords( SporeData.tileifyCoord(BoardShift.x.changeCoords(MousePos.getX,true)),false);
     SporeData.addNewSpore(
-        newSporeX,
-        BoardShift.y.changeCoords( SporeData.tileifyCoord(BoardShift.y.changeCoords(MousePos.getY,true),false))
+        BoardShift.x.changeCoords( SporeData.tileifyCoord(BoardShift.x.changeCoords(MousePos.getX(),true)),false),
+        BoardShift.y.changeCoords( SporeData.tileifyCoord(BoardShift.y.changeCoords(MousePos.getY(),true),false))
     )
     SporeData.checkSporesIfDead()
     SporeData.calculatePlayerPointCount()
@@ -52,7 +51,6 @@ function animateDonutAndSporeCanvas(){
         }
         if (event.key === Settings.undeLastActionKey){
             console.log('undoLastAction')
-            SporeData.undoLastAction()
         }
     })
     console.log('animate is running!')

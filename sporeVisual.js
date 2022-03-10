@@ -57,11 +57,10 @@ const SporeVisual = (()=>{
     }
     const markSporesInRange = ()=>{
         SporeData.loopOverAllSpores(function(spore1){
-            console.log('marksporesInRange')
             var distToOtherSpore = SporeData.calcDistance(
                 spore1.x,spore1.y,
-                SporeData.tileifyCoord(BoardShift.x.changeCoords(MousePos.getX,true)),
-                SporeData.tileifyCoord(BoardShift.y.changeCoords(MousePos.getY,true))
+                SporeData.tileifyCoord(BoardShift.x.changeCoords(MousePos.getX(),true)),
+                SporeData.tileifyCoord(BoardShift.y.changeCoords(MousePos.getY(),true))
             )          
 
             if (distToOtherSpore < Settings.outerRadius){
