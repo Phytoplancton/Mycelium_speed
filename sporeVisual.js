@@ -59,8 +59,8 @@ const SporeVisual = (()=>{
         SporeData.loopOverAllSpores(function(spore1){
             var distToOtherSpore = SporeData.calcDistance(
                 spore1.x,spore1.y,
-                SporeData.tileifyCoord(BoardShift.x.changeCoords(MousePos.getX(),true)),
-                SporeData.tileifyCoord(BoardShift.y.changeCoords(MousePos.getY(),true))
+                SporeData.tileifyCoord(BoardShift.x.changeCoords(MousePos.x,true)),
+                SporeData.tileifyCoord(BoardShift.y.changeCoords(MousePos.y,true))
             )          
 
             if (distToOtherSpore < Settings.outerRadius){

@@ -55,7 +55,7 @@ const Timer = (()=>{
     } 
 
     return {
-        drawTimer, startReduction, 
+        drawTimer, startReduction, stopReduction,
         get timers(){return timers}
     }
 })()

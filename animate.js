@@ -17,8 +17,8 @@ function resize(){
 function placeNewSpore() {
     Timer.startReduction();
     SporeData.addNewSpore(
-        BoardShift.x.changeCoords( SporeData.tileifyCoord(BoardShift.x.changeCoords(MousePos.getX(),true)),false),
-        BoardShift.y.changeCoords( SporeData.tileifyCoord(BoardShift.y.changeCoords(MousePos.getY(),true),false))
+        BoardShift.x.changeCoords( SporeData.tileifyCoord(BoardShift.x.changeCoords(MousePos.x,true)),false),
+        BoardShift.y.changeCoords( SporeData.tileifyCoord(BoardShift.y.changeCoords(MousePos.y,true),false))
     )
     SporeData.checkSporesIfDead()
     SporeData.calculatePlayerPointCount()

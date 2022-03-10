@@ -3,9 +3,7 @@ const MousePos = (()=>{
     //default Mouseposiion = screen middle
     let x;
     let y;
-    const getX = ()=>{return x}
-    const getY = ()=>{return y}
-    
+
     const updateMousePos = (e)=>{
         x = e.clientX - 9
         y = e.clientY - 9
@@ -13,7 +11,10 @@ const MousePos = (()=>{
     }
     window.addEventListener('mousemove',updateMousePos)
 
-    return {getX, getY}
+    return {
+        get x(){return x}, 
+        get y(){return y}
+    }
 })()
 
 

@@ -1,7 +1,7 @@
 const WinningAlert = (()=>{
 
     const checkPointDiff = ()=>{
-        if (SporeDatcalcScoreDiff() >= Settings.winningDiff){
+        if (SporeData.calcScoreDiff() >= Settings.winningDiff){
             return true;
         }
         return false;
