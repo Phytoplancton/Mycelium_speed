@@ -1,19 +1,19 @@
-function sporeConstructor(x,y,player){
-    const Spore = {}
-
-    Spore.x = x
-    Spore.y = y
-    Spore.isActive = true
-    Spore.numberOfConnections = 0
-    Spore.linkedTo = []
-    Spore.player = player
-
-    return Spore
-}
 
 
 const SporeData = (()=>{
 
+    const sporeConstructor = (x,y,player)=>{
+        const Spore = {}
+    
+        Spore.x = x
+        Spore.y = y
+        Spore.isActive = true
+        Spore.numberOfConnections = 0
+        Spore.linkedTo = []
+        Spore.player = player
+    
+        return Spore
+    }
     let sporeArray = []
     const playerPointCount = Array(Settings.playerCount).fill(0)
 
