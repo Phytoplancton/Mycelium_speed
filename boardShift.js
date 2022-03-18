@@ -20,6 +20,9 @@ const BoardShift = (()=>{
                 currentShiftLabel = shiftLabel
                 console.log('shiftcoords')
             }
+            SporeVisual.drawBoard()
+            
+            
         }
         const clarShiftIntervalIfKey = (shiftLabel)=>{
             if (shiftLabel === currentShiftLabel){

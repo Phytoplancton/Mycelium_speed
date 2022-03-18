@@ -87,7 +87,7 @@ const Settings = (()=>{
     S.shiftStep = 5
 
     //timer
-    S.maxTime = 10.0 // seconds per player
+    S.maxTime = 300.0 // seconds per player
     S.reductionTime = 100 // ms
 
     return S
