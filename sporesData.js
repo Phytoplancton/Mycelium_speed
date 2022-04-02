@@ -88,7 +88,6 @@ const SporeData = (()=>{
 
     }
 
-
     const checkIfColorsAreEqual = function(spore1,spore2){
         //checkSpores and set linecolor
         if(spore1.player === spore2.player){
@@ -110,7 +109,6 @@ const SporeData = (()=>{
             })
         })
     }
-
 
     const deadSporeIndicesOfPlayerInArray = (player) => {
         let deadSpores = []
@@ -148,7 +146,6 @@ const SporeData = (()=>{
     //     removeSpore(indexToDelete)
     //     Settings.currentPlayer = sporeArray[indexToDelete].player
     // }
-
 
     const calcScoreDiff = ()=>{
         let playerPointCountCopy = [...playerPointCount]
