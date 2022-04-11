@@ -12,22 +12,19 @@ const Canvas = (()=>{
     const board = document.body.appendChild(document.createElement("canvas"));
     const boardCtx = board.getContext("2d");
     defineCanvas(board, '0', Settings.canvasColor);
-    console.log('static  is readY!');
 
     const score = document.body.appendChild(document.createElement("canvas"));
     const scoreCtx = score.getContext("2d");
     defineCanvas(score, '1');
-    console.log('score  is readY!')
 
     const timer = document.body.appendChild(document.createElement("canvas"));
     const timerCtx = timer.getContext("2d");
     defineCanvas(timer, '2')
-    console.log('score  is readY!')
 
     const donut = document.body.appendChild(document.createElement("canvas"));
     const donutCtx = donut.getContext("2d");
     defineCanvas(donut, '3', 'rgba(0,0,0,0.0)', 0.3)
-    console.log('donut  is readY!')
+    
 
     const setup = ()=>{
         document.body.style.backgroundColor = Settings.canvasColor;
@@ -50,12 +47,5 @@ const Canvas = (()=>{
     }
 
 })()
-
-
-
-
-
-
-
 
 

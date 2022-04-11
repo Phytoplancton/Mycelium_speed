@@ -1,13 +1,12 @@
 const WinningAlert = (()=>{
-    const A = {}
 
-    A.checkPointDiff = ()=>{
+    const checkPointDiff = ()=>{
         if (SporeData.calcScoreDiff() >= Settings.winningDiff){
             return true;
         }
         return false;
     }
-    A.checkTimer = ()=>{
+    const checkTimer = ()=>{
         if (Timer.timers[Settings.currentPlayer] <= 0){
             Timer.timers[Settings.currentPlayer] = 0;
             Settings.nextPlayer();
@@ -18,9 +17,9 @@ const WinningAlert = (()=>{
         }
         return false;
     }
-    A.checkWinner = ()=>{
-        var timerWin = A.checkTimer();
-        var pointWin = A.checkPointDiff();
+    const checkWinner = ()=>{
+        var timerWin = checkTimer();
+        var pointWin = checkPointDiff();
         if (timerWin || pointWin){
             var alertString = ''
             if (timerWin){
@@ -39,5 +38,7 @@ const WinningAlert = (()=>{
 
     }
 
-    return A
+    return {
+        checkWinner
+    }
 })()

@@ -18,5 +18,5 @@ Despite its simple rules, the gameplay quickly results in unpredictable complexi
 - Use the arrow keys to shift the board
 
 
-### Square Tiling
+### Speed
 This is a modified version of the Mycelium game. Each player has a fixed amount of time to do his turns - indicated by a countdown in the bottom left corner. If one player exceeds his time limit, he loses.
