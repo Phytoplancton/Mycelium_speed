@@ -1,23 +1,32 @@
-const MouseDonut = (()=>{
-    const draw = ()=>{
-        Canvas.donutCtx.beginPath()
-        Canvas.donutCtx.strokeStyle = Settings.playerColors[Settings.currentPlayer]
-        Canvas.donutCtx.lineWidth = Settings.outerRadius - Settings.innerRadius
-        Canvas.donutCtx.arc(
-            BoardShift.x.changeCoords(SporeData.tileifyCoord(BoardShift.x.changeCoords(MousePos.x,true),false)),
-            BoardShift.y.changeCoords(SporeData.tileifyCoord(BoardShift.y.changeCoords(MousePos.y,true),false)),
-            Settings.innerRadius + (Settings.outerRadius-Settings.innerRadius)/2 - Settings.sporeRadius,
-            0,Math.PI*2,false
-        )
-        
-        Canvas.donutCtx.stroke()
+import * as settings from "./settings.js";
+import * as canvas from "./canvas.js";
+import * as boardShift from "./boardShift.js";
+import * as mousePos from "./mousePos.js";
+import * as sporeData from "./sporeData.js";
 
-    }
+
+const draw = ()=>{
+    canvas.donutCtx.beginPath()
+    canvas.donutCtx.strokeStyle = settings.playerColors[settings.currentPlayer]
+    canvas.donutCtx.lineWidth = settings.outerRadius - settings.innerRadius
+    canvas.donutCtx.arc(
+        boardShift.x.changeCoords(sporeData.tileifyCoord(
+            boardShift.x.changeCoords(mousePos.x,true),false)),
+        boardShift.y.changeCoords(sporeData.tileifyCoord(
+            boardShift.y.changeCoords(mousePos.y,true),false)),
+        settings.innerRadius 
+        + (settings.outerRadius-settings.innerRadius)/2 
+        - settings.sporeRadius,
+        0,Math.PI*2,false
+    )
     
+    canvas.donutCtx.stroke()
 
-    return {
-        draw
-    }
-})()
+}
+
+
+export {
+    draw
+}
 
 

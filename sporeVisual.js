@@ -1,106 +1,110 @@
-const SporeVisual = (()=>{
+import * as settings from "./settings.js";
+import * as sporeData from "./sporeData.js";
+import * as boardShift from "./boardShift.js";
+import * as mousePos from "./mousePos.js";
+import * as canvas from "./canvas.js";
 
-    const drawPlayerScore = ()=>{
-        for (var i = 0; i < Settings.playerCount; i ++){
-            Canvas.scoreCtx.font = Settings.font
-            Canvas.scoreCtx.fillStyle = Settings.neutralColor
-            var TextBlockheight = Settings.textZSpace*Settings.playerCount
-            Canvas.scoreCtx.fillText(
-                `${Settings.playerNames[i]} player has ${SporeData.playerPointCount[i]} points`,
-                window.innerWidth - Settings.textMarginRight,
-                window.innerHeight - Settings.textMarginBottom 
-                - TextBlockheight + Settings.textZSpace*i)        
+
+const drawPlayerScore = ()=>{
+    for (var i = 0; i < settings.playerCount; i ++){
+        canvas.scoreCtx.font = settings.font
+        canvas.scoreCtx.fillStyle = settings.neutralColor
+        var TextBlockheight = settings.textZSpace*settings.playerCount
+        canvas.scoreCtx.fillText(
+            `${settings.playerNames[i]} player has ${sporeData.playerPointCount[i]} points`,
+            window.innerWidth - settings.textMarginRight,
+            window.innerHeight - settings.textMarginBottom 
+            - TextBlockheight + settings.textZSpace*i)        
+    }
+
+}
+const drawScoreDiff = ()=>{
+    var scoreDiff = sporeData.calcScoreDiff()
+    canvas.scoreCtx.font = settings.font
+    canvas.scoreCtx.fillStyle = settings.playerColors[sporeData.calcLeadingPlayer()]
+    if (scoreDiff === 0 ){canvas.scoreCtx.fillStyle = settings.neutralColor}
+    
+    canvas.scoreCtx.fillText(
+        `the point difference is: ${scoreDiff} points`,
+        settings.textMarginLeft,
+        window.innerHeight - settings.textMarginBottom - settings.textZSpace)    
+    
+}
+
+const drawAllSpores = ()=>{
+    sporeData.loopOverAllSpores(function(spore){
+            var shiftedX = boardShift.x.changeCoords(spore.x)
+            var shiftedY = boardShift.y.changeCoords(spore.y)
+            canvas.boardCtx.beginPath()
+            canvas.boardCtx.lineWidth = 0
+            canvas.boardCtx.fillStyle = settings.playerColors[spore.player]
+            canvas.boardCtx.arc(shiftedX,shiftedY,settings.sporeRadius,0,Math.PI*2,false)
+
+            canvas.boardCtx.fill()
         }
-
-    }
-    const drawScoreDiff = ()=>{
-        var scoreDiff = SporeData.calcScoreDiff()
-        Canvas.scoreCtx.font = Settings.font
-        Canvas.scoreCtx.fillStyle = Settings.playerColors[SporeData.calcLeadingPlayer()]
-        if (scoreDiff === 0 ){Canvas.scoreCtx.fillStyle = Settings.neutralColor}
-        
-        Canvas.scoreCtx.fillText(
-            `the point difference is: ${scoreDiff} points`,
-            Settings.textMarginLeft,
-            window.innerHeight - Settings.textMarginBottom - Settings.textZSpace)    
-        
-    }
-
-    const drawAllSpores = ()=>{
-        SporeData.loopOverAllSpores(function(spore){
-                var shiftedX = BoardShift.x.changeCoords(spore.x)
-                var shiftedY = BoardShift.y.changeCoords(spore.y)
-                Canvas.boardCtx.beginPath()
-                Canvas.boardCtx.lineWidth = 0
-                Canvas.boardCtx.fillStyle = Settings.playerColors[spore.player]
-                Canvas.boardCtx.arc(shiftedX,shiftedY,Settings.sporeRadius,0,Math.PI*2,false)
-
-                Canvas.boardCtx.fill()
-            }
-        )
-    }
-    const drawAllLines = ()=>{
-        SporeData.loopOverAllSpores(function(spore1){
-            var shiftedX = BoardShift.x.changeCoords(spore1.x)
-            if(shiftedX<0 || shiftedX>window.innerWidth){return}
-            var shiftedY = BoardShift.y.changeCoords(spore1.y)
-            if(shiftedY<0 || shiftedY>window.innerHeight){return}
-            SporeData.loopOverLinkedSpores(spore1,(spore1,spore2)=>{
-                Canvas.boardCtx.beginPath()
-                SporeData.checkIfColorsAreEqual(spore1,spore2)
-                Canvas.boardCtx.lineWidth = Settings.lineWidth
-                Canvas.boardCtx.moveTo(shiftedX,shiftedY)
-                Canvas.boardCtx.lineTo(BoardShift.x.changeCoords(spore2.x),BoardShift.y.changeCoords(spore2.y))
-                Canvas.boardCtx.stroke()
-            })
+    )
+}
+const drawAllLines = ()=>{
+    sporeData.loopOverAllSpores(function(spore1){
+        var shiftedX = boardShift.x.changeCoords(spore1.x)
+        if(shiftedX<0 || shiftedX>window.innerWidth){return}
+        var shiftedY = boardShift.y.changeCoords(spore1.y)
+        if(shiftedY<0 || shiftedY>window.innerHeight){return}
+        sporeData.loopOverLinkedSpores(spore1,(spore1,spore2)=>{
+            canvas.boardCtx.beginPath()
+            sporeData.checkIfColorsAreEqual(spore1,spore2)
+            canvas.boardCtx.lineWidth = settings.lineWidth
+            canvas.boardCtx.moveTo(shiftedX,shiftedY)
+            canvas.boardCtx.lineTo(boardShift.x.changeCoords(spore2.x),boardShift.y.changeCoords(spore2.y))
+            canvas.boardCtx.stroke()
         })
-    }
-    const markSporesInRange = ()=>{
-        SporeData.loopOverAllSpores(function(spore1){
-            var distToOtherSpore = SporeData.calcDistance(
-                spore1.x,spore1.y,
-                SporeData.tileifyCoord(BoardShift.x.changeCoords(MousePos.x,true)),
-                SporeData.tileifyCoord(BoardShift.y.changeCoords(MousePos.y,true))
-            )          
+    })
+}
+const markSporesInRange = ()=>{
+    sporeData.loopOverAllSpores(function(spore1){
+        var distToOtherSpore = sporeData.calcDistance(
+            spore1.x,spore1.y,
+            sporeData.tileifyCoord(boardShift.x.changeCoords(mousePos.x,true)),
+            sporeData.tileifyCoord(boardShift.y.changeCoords(mousePos.y,true))
+        )          
 
-            if (distToOtherSpore < Settings.outerRadius){
-                Canvas.timerCtx.beginPath()
-                Canvas.timerCtx.strokeStyle = Settings.playerColors[spore1.player]
-                Canvas.timerCtx.lineWidth = Settings.markingWidth
-                Canvas.timerCtx.arc(BoardShift.x.changeCoords(spore1.x),BoardShift.y.changeCoords(spore1.y),Settings.sporeRadius,0,Math.PI*2,false)
-                Canvas.timerCtx.stroke()
-            }
-        })
-    }
+        if (distToOtherSpore < settings.outerRadius){
+            canvas.timerCtx.beginPath()
+            canvas.timerCtx.strokeStyle = settings.playerColors[spore1.player]
+            canvas.timerCtx.lineWidth = settings.markingWidth
+            canvas.timerCtx.arc(boardShift.x.changeCoords(spore1.x),boardShift.y.changeCoords(spore1.y),settings.sporeRadius,0,Math.PI*2,false)
+            canvas.timerCtx.stroke()
+        }
+    })
+}
 
-    const drawProvisionalGrid = ()=>{
-        for ( var x = 0; x<Settings.horizontalTileCount; x++){
-            for (var y = 0 ; y<Settings.verticalTileCount; y++){
-                Canvas.boardCtx.fillStyle = Settings.gridColor
-                Canvas.boardCtx.fillRect(
-                    BoardShift.x.changeCoords(Settings.tileLength * (x-Settings.tileMarkingLengthFactor),false), 
-                    BoardShift.y.changeCoords(Settings.tileLength *(y-Settings.tileMarkingLengthFactor),false), 
-                    Settings.tileLength * Settings.tileMarkingLengthFactor* 2,
-                    Settings.tileLength * Settings.tileMarkingLengthFactor* 2,
-                )
-            }
+const drawProvisionalGrid = ()=>{
+    for ( var x = 0; x<settings.horizontalTileCount; x++){
+        for (var y = 0 ; y<settings.verticalTileCount; y++){
+            canvas.boardCtx.fillStyle = settings.gridColor
+            canvas.boardCtx.fillRect(
+                boardShift.x.changeCoords(settings.tileLength * (x-settings.tileMarkingLengthFactor),false), 
+                boardShift.y.changeCoords(settings.tileLength *(y-settings.tileMarkingLengthFactor),false), 
+                settings.tileLength * settings.tileMarkingLengthFactor* 2,
+                settings.tileLength * settings.tileMarkingLengthFactor* 2,
+            )
         }
     }
+}
 
-    const drawBoard = ()=>{
-        Canvas.boardCtx.clearRect(0,0,window.innerWidth,window.innerHeight)
-        drawAllLines()
-        drawAllSpores()
-    }
-    const drawScore = ()=>{
-        Canvas.scoreCtx.clearRect(0,0,window.innerWidth,window.innerHeight)
-        drawPlayerScore()
-        drawScoreDiff()
-    }
+const drawBoard = ()=>{
+    canvas.boardCtx.clearRect(0,0,window.innerWidth,window.innerHeight)
+    drawAllLines()
+    drawAllSpores()
+}
+const drawScore = ()=>{
+    canvas.scoreCtx.clearRect(0,0,window.innerWidth,window.innerHeight)
+    drawPlayerScore()
+    drawScoreDiff()
+}
 
-    return {
-        drawBoard,
-        drawScore,
-        markSporesInRange
-    }
-})()
+export {
+    drawBoard,
+    drawScore,
+    markSporesInRange
+}

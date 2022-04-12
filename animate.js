@@ -1,63 +1,71 @@
-const Animate = (()=>{
-    drawStaticCanvases = ()=>{
-        SporeVisual.drawBoard()
-        SporeVisual.drawScore()
-    }
+import * as settings from "./settings.js";
+import * as sporeVisual from "./sporeVisual.js";
+import * as canvas from "./canvas.js";
+import * as sporeData from "./sporeData.js";
+import * as boardShift from "./boardShift.js";
+import * as mouseDonut from "./mouseDonut.js";
+import * as timer from "./timer.js";
+import * as mousePos from "./mousePos.js";
+import * as winningAlert from "./winningAlert.js";
+
+const drawStaticCanvases = ()=>{
+    sporeVisual.drawBoard()
+    sporeVisual.drawScore()
+}
+
+const resize = ()=>{
+    canvas.resize()
+    drawStaticCanvases()
+    settings.setBoardDimensions()
+
+    console.log('canvas is resized!')
+
+}
+
+const placeNewSpore = ()=>{
+    timer.startReduction();
+    sporeData.addNewSpore(
+        boardShift.x.changeCoords( 
+            sporeData.tileifyCoord(
+                boardShift.x.changeCoords(mousePos.x,true)
+            ),false),
+        boardShift.y.changeCoords( sporeData.tileifyCoord(boardShift.y.changeCoords(mousePos.y,true),false))
+    )
+    sporeData.checkSporesIfDead()
+    sporeData.calculatePlayerPointCount()
+    drawStaticCanvases()
+    winningAlert.checkWinner()
+
+    // console.log('clickEvent')
     
-    resize = ()=>{
-        Canvas.resize()
-        drawStaticCanvases()
-        Settings.setBoardDimensions()
+}
+
+const animateDonutAndSporeCanvas = ()=>{
+    canvas.donutCtx.clearRect(0,0,window.innerWidth,window.innerHeight)
+    mouseDonut.draw()
+    timer.drawTimer()
+    sporeVisual.markSporesInRange()
+    sporeVisual.drawBoard()
     
-        console.log('canvas is resized!')
+    requestAnimationFrame(animateDonutAndSporeCanvas)
+}
+
+
+
+const initalizeListeners = (()=>{
+    resize()
     
-    }
-    
-    placeNewSpore = ()=>{
-        Timer.startReduction();
-        SporeData.addNewSpore(
-            BoardShift.x.changeCoords( SporeData.tileifyCoord(BoardShift.x.changeCoords(MousePos.x,true)),false),
-            BoardShift.y.changeCoords( SporeData.tileifyCoord(BoardShift.y.changeCoords(MousePos.y,true),false))
-        )
-        SporeData.checkSporesIfDead()
-        SporeData.calculatePlayerPointCount()
-        drawStaticCanvases()
-        WinningAlert.checkWinner()
-    
-        // console.log('clickEvent')
-        
-    }
-    
-    animateDonutAndSporeCanvas = ()=>{
-        Canvas.donutCtx.clearRect(0,0,window.innerWidth,window.innerHeight)
-        MouseDonut.draw()
-        Timer.drawTimer()
-        SporeVisual.markSporesInRange()
-        SporeVisual.drawBoard()
-        
-        requestAnimationFrame(animateDonutAndSporeCanvas)
-    }
-    
-    
-    
-    (initalizeListeners = ()=>{
-        resize()
-        
-        window.addEventListener('resize',resize) 
-        animateDonutAndSporeCanvas()
-        window.addEventListener('keydown',(event)=>{
-            console.log('keydown - ' + event.code)
-            if (event.code == Settings.newSporeKey){
-                placeNewSpore()
-            }
-            if (event.key === Settings.undeLastActionKey){
-                console.log('undoLastAction')
-            }
-        })
-        console.log('animate is running!')
-    
-    })()
-    
-    
+    window.addEventListener('resize',resize) 
+    animateDonutAndSporeCanvas()
+    window.addEventListener('keydown',(event)=>{
+        console.log('keydown - ' + event.code)
+        if (event.code == settings.newSporeKey){
+            placeNewSpore()
+        }
+        if (event.key === settings.undeLastActionKey){
+            console.log('undoLastAction')
+        }
+    })
+    console.log('animate is running!')
 })()
 

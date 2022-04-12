@@ -1,21 +1,19 @@
 
-const MousePos = (()=>{
-    //default Mouseposiion = screen middle
-    let x;
-    let y;
 
-    const updateMousePos = (e)=>{
-        x = e.clientX - 9
-        y = e.clientY - 9
-        console.log("Mousemove")
-    }
-    window.addEventListener('mousemove',updateMousePos)
+//default Mouseposiion = undefined
+let x;
+let y;
 
-    return {
-        get x(){return x}, 
-        get y(){return y}
-    }
-})()
+const updateMousePos = (e)=>{
+    x = e.clientX - 9
+    y = e.clientY - 9
+    console.log("Mousemove")
+}
+window.addEventListener('mousemove',updateMousePos)
+
+export {
+    x, y
+}
 
 
 
