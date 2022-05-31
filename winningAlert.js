@@ -37,6 +37,7 @@ const checkWinner = ()=>{
             + 'point win! \n'
         }
         alert(alertString)
+        window.location.reload();
     }
 
 }
