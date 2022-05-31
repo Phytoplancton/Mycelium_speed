@@ -35,6 +35,7 @@ const WinningAlert = (()=>{
                 + 'point win! \n'
             }
             alert(alertString)
+            window.location.reload();
         }
 
     }
